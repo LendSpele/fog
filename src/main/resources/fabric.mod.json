@@ -1,0 +1,31 @@
+{
+	"schemaVersion": 1,
+	"id": "eventik",
+	"version": "${version}",
+	"name": "Event",
+	"description": "Created by datapeice",
+	"authors": [
+		"Illia Datsiuk"
+	],
+	"contact": {
+		"homepage": "https://fabricmc.net/",
+		"sources": "https://github.com/FabricMC/fabric-example-mod"
+	},
+	"license": "CC0-1.0",
+	"icon": "assets/eventik/icon.png",
+	"environment": "*",
+	"entrypoints": {
+		"main": [
+			"com.datapeice.event.Event"
+		]
+	},
+	"depends": {
+		"fabricloader": ">=0.16.10",
+		"minecraft": "~1.21.4",
+		"java": ">=21",
+		"fabric-api": "*"
+	},
+	"suggests": {
+		"another-mod": "*"
+	}
+}

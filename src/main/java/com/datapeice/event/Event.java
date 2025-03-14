@@ -1,0 +1,188 @@
+package com.datapeice.event;
+
+import net.fabricmc.api.ModInitializer;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerEntityEvents;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
+import net.minecraft.entity.EntityType;
+import net.minecraft.entity.EquipmentSlot;
+import net.minecraft.entity.LightningEntity;
+import net.minecraft.entity.SpawnReason;
+import net.minecraft.entity.effect.StatusEffectInstance;
+import net.minecraft.entity.effect.StatusEffects;
+import net.minecraft.entity.mob.CreeperEntity;
+import net.minecraft.entity.mob.HostileEntity;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
+import net.minecraft.network.packet.s2c.play.PlayerListS2CPacket;
+import net.minecraft.particle.ParticleTypes;
+import net.minecraft.scoreboard.ScoreboardDisplaySlot;
+import net.minecraft.scoreboard.ScoreboardObjective;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.server.world.ServerWorld;
+import net.minecraft.text.Text;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.GameRules;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.Random;
+
+
+public class Event implements ModInitializer {
+	public static final String MOD_ID = "eventik";
+	public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
+
+	@Override
+	public void onInitialize() {
+		LOGGER.info("Eventik loaded! :3");
+		ServerEntityEvents.ENTITY_LOAD.register((entity, world) -> {
+			if (entity instanceof HostileEntity mob) {
+				enhanceMobArmor(mob);
+				enhanceMobEffect(mob);
+			}
+			if (entity instanceof CreeperEntity creeper) {
+				Random random = new Random();
+				if (!creeper.isCharged() && (random.nextInt(0, 10) < 2)) { // 50% шанс
+					chargeCreeper(creeper); // Заряжаем крипера
+					creeper.setFireTicks(0); // Снимаем огонь с крипера
+				}
+			}
+		});
+		ServerTickEvents.END_SERVER_TICK.register(this::onServerTick);
+
+		ServerPlayConnectionEvents.JOIN.register((handler, sender, server) -> handler.getPlayer().setSilent(true));
+		ServerPlayConnectionEvents.DISCONNECT.register((handler, server) -> handler.getPlayer().setSilent(true));
+
+	}
+
+	private void enhanceMobEffect(HostileEntity mob) {
+		Random rand = new Random();
+		if (rand.nextInt(0, 9) < 2){
+			mob.addStatusEffect(new StatusEffectInstance(StatusEffects.FIRE_RESISTANCE, 1000000000, 2, false, true));
+		}
+		if (rand.nextInt(0, 9) < 2){
+			mob.addStatusEffect(new StatusEffectInstance(StatusEffects.SPEED, 1000000000, 1, false, true));
+		}
+		if (rand.nextInt(0, 9) < 2){
+			mob.addStatusEffect(new StatusEffectInstance(StatusEffects.STRENGTH, 1000000000, 2, false, true));
+		}
+		if (rand.nextInt(0, 9) < 2){
+			mob.addStatusEffect(new StatusEffectInstance(StatusEffects.HEALTH_BOOST, 1000000000, 1, false, true));
+		}
+		if (rand.nextInt(0, 9) < 2){
+			mob.addStatusEffect(new StatusEffectInstance(StatusEffects.RESISTANCE, 1000000000, 2, false, true));
+		}
+	}
+
+	private void onServerTick(MinecraftServer server) {
+		for (ServerPlayerEntity player : server.getPlayerManager().getPlayerList()) {
+			boolean hasCompassOrMap =
+					player.getMainHandStack().isOf(Items.COMPASS) ||
+							player.getOffHandStack().isOf(Items.COMPASS) ||
+							player.getMainHandStack().isOf(Items.FILLED_MAP) ||
+							player.getOffHandStack().isOf(Items.FILLED_MAP);
+
+			updateDebugInfo(player, hasCompassOrMap);
+			updatePlayerNames(server, player);
+		}
+
+		clearTabList(server);
+	}
+
+	private void updateDebugInfo(ServerPlayerEntity player, boolean hasCompassOrMap) {
+		boolean currentState = player.getServerWorld().getGameRules().getBoolean(GameRules.REDUCED_DEBUG_INFO);
+
+		if (hasCompassOrMap && currentState) {
+			BlockPos playerPOS = player.getBlockPos();
+			player.getServerWorld().getGameRules().get(GameRules.REDUCED_DEBUG_INFO).set(false, player.getServer());
+			player.sendMessage(Text.literal("Координаты включены (компас или карта в руке)! X: " + playerPOS.getX() + " Y: " + playerPOS.getY()+ " Z: " + playerPOS.getZ()), true);
+		} else if (!hasCompassOrMap && !currentState) {
+			player.getServerWorld().getGameRules().get(GameRules.REDUCED_DEBUG_INFO).set(true, player.getServer());
+			player.sendMessage(Text.literal("Используйте компас или карту для просмотра кординат"), true);
+		}
+	}
+
+	private void updatePlayerNames(MinecraftServer server, ServerPlayerEntity player) {
+		boolean shouldShowNames = false;
+
+		for (ServerPlayerEntity other : server.getPlayerManager().getPlayerList()) {
+			if (player != other && player.squaredDistanceTo(other) <= 2) { // 2 метра = 4 блока
+				shouldShowNames = true;
+				break;
+			}
+		}
+
+		ScoreboardObjective objective = shouldShowNames ? null : player.getScoreboard().getObjectiveForSlot(ScoreboardDisplaySlot.LIST);
+		player.getScoreboard().setObjectiveSlot(ScoreboardDisplaySlot.LIST, objective);
+	}
+
+	private void clearTabList(MinecraftServer server) {
+		for (ServerPlayerEntity player : server.getPlayerManager().getPlayerList()) {
+			player.networkHandler.sendPacket(new PlayerListS2CPacket(PlayerListS2CPacket.Action.UPDATE_DISPLAY_NAME, player));
+		}
+	}
+
+	private void enhanceMobArmor(HostileEntity mob) {
+		if (mob.getRandom().nextFloat() < 0.7f) {
+			net.minecraft.util.math.random.Random random = mob.getRandom();  // Use Minecraft's Random
+
+			// Список возможных материалов брони
+			Item[] armorMaterials = {
+					Items.IRON_HELMET, Items.DIAMOND_HELMET, Items.GOLDEN_HELMET, Items.NETHERITE_HELMET,
+					Items.IRON_CHESTPLATE, Items.DIAMOND_CHESTPLATE, Items.GOLDEN_CHESTPLATE, Items.NETHERITE_CHESTPLATE,
+					Items.IRON_LEGGINGS, Items.DIAMOND_LEGGINGS, Items.GOLDEN_LEGGINGS, Items.NETHERITE_LEGGINGS,
+					Items.IRON_BOOTS, Items.DIAMOND_BOOTS, Items.GOLDEN_BOOTS, Items.NETHERITE_BOOTS
+			};
+
+			// Устанавливаем броню для каждого слота с случайным материалом
+
+
+			if (random.nextBoolean()) mob.equipStack(EquipmentSlot.HEAD, new ItemStack(armorMaterials[random.nextInt(4)]));  // 0-3 индексы для шлема
+			if (random.nextBoolean()) mob.equipStack(EquipmentSlot.CHEST, new ItemStack(armorMaterials[random.nextInt(4) + 4]));  // 4-7 индексы для нагрудников
+			if (random.nextBoolean()) mob.equipStack(EquipmentSlot.LEGS, new ItemStack(armorMaterials[random.nextInt(4) + 8]));  // 8-11 индексы для поножей
+			if (random.nextBoolean()) mob.equipStack(EquipmentSlot.FEET, new ItemStack(armorMaterials[random.nextInt(4) + 12]));  // 12-15 индексы для ботинок
+
+			// Устанавливаем шанс выпадения брони
+			mob.setEquipmentDropChance(EquipmentSlot.HEAD, 0.5f);
+			mob.setEquipmentDropChance(EquipmentSlot.CHEST, 0.5f);
+			mob.setEquipmentDropChance(EquipmentSlot.LEGS, 0.5f);
+			mob.setEquipmentDropChance(EquipmentSlot.FEET, 0.5f);
+		}
+	}
+	private void chargeCreeper(CreeperEntity creeper) {
+		if (creeper != null) {
+			if (!creeper.getWorld().isClient) {
+				ServerWorld world = (ServerWorld) creeper.getWorld();
+
+				BlockPos pos = creeper.getBlockPos();
+
+				LightningEntity lightning = EntityType.LIGHTNING_BOLT.create(creeper.getWorld(), SpawnReason.TRIGGERED);
+
+				lightning.refreshPositionAfterTeleport(pos.getX(), pos.getY(), pos.getZ());
+
+				world.spawnEntity(lightning);
+				creeper.addStatusEffect(new StatusEffectInstance(StatusEffects.FIRE_RESISTANCE, 200, 3, false, false));
+				for (int i = 0; i < 100; i++) {  // Количество частиц
+					double offsetX = (Math.random() - 0.5) * 2;  // Случайное смещение по оси X
+					double offsetY = Math.random() * 1.5;  // Случайное смещение по оси Y
+					double offsetZ = (Math.random() - 0.5) * 2;  // Случайное смещение по оси Z
+
+					world.addParticle(ParticleTypes.SOUL_FIRE_FLAME,
+							creeper.getX() + offsetX,
+							creeper.getY() + offsetY,
+							creeper.getZ() + offsetZ,
+							0.0, 0.0, 0.0
+					);
+				}
+			}
+		}
+
+	}
+
+
+}
+
+
