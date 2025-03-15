@@ -148,10 +148,10 @@ public class Event implements ModInitializer {
 			if (random.nextBoolean()) mob.equipStack(EquipmentSlot.FEET, new ItemStack(armorMaterials[random.nextInt(3) + 9]));  // 9-11 индексы для ботинок
 
 			// Устанавливаем шанс выпадения брони
-			mob.setEquipmentDropChance(EquipmentSlot.HEAD, 0.2f);
-			mob.setEquipmentDropChance(EquipmentSlot.CHEST, 0.2f);
-			mob.setEquipmentDropChance(EquipmentSlot.LEGS, 0.2f);
-			mob.setEquipmentDropChance(EquipmentSlot.FEET, 0.2f);
+			mob.setEquipmentDropChance(EquipmentSlot.HEAD, 0.03f);
+			mob.setEquipmentDropChance(EquipmentSlot.CHEST, 0.01f);
+			mob.setEquipmentDropChance(EquipmentSlot.LEGS, 0.01f);
+			mob.setEquipmentDropChance(EquipmentSlot.FEET, 0.05f);
 		}
 	}
 	private void chargeCreeper(CreeperEntity creeper) {
