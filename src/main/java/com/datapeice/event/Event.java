@@ -37,7 +37,8 @@ public class Event implements ModInitializer {
 
 	@Override
 	public void onInitialize() {
-		LOGGER.info("Eventik loaded! :3");
+		LOGGER.info("SL:" +
+				"Eventik loaded! :3");
 		ServerEntityEvents.ENTITY_LOAD.register((entity, world) -> {
 			if (entity instanceof HostileEntity mob) {
 				enhanceMobArmor(mob);
@@ -61,19 +62,19 @@ public class Event implements ModInitializer {
 	private void enhanceMobEffect(HostileEntity mob) {
 		Random rand = new Random();
 		if (rand.nextInt(0, 9) < 2){
-			mob.addStatusEffect(new StatusEffectInstance(StatusEffects.FIRE_RESISTANCE, 1000000000, 2, false, true));
+			mob.addStatusEffect(new StatusEffectInstance(StatusEffects.FIRE_RESISTANCE, 1000000000, 1, false, true));
 		}
 		if (rand.nextInt(0, 9) < 2){
-			mob.addStatusEffect(new StatusEffectInstance(StatusEffects.SPEED, 1000000000, 1, false, true));
+			mob.addStatusEffect(new StatusEffectInstance(StatusEffects.SPEED, 1000000000, 2, false, true));
 		}
 		if (rand.nextInt(0, 9) < 2){
 			mob.addStatusEffect(new StatusEffectInstance(StatusEffects.STRENGTH, 1000000000, 2, false, true));
 		}
 		if (rand.nextInt(0, 9) < 2){
-			mob.addStatusEffect(new StatusEffectInstance(StatusEffects.HEALTH_BOOST, 1000000000, 1, false, true));
+			mob.addStatusEffect(new StatusEffectInstance(StatusEffects.HEALTH_BOOST, 1000000000, 2, false, true));
 		}
 		if (rand.nextInt(0, 9) < 2){
-			mob.addStatusEffect(new StatusEffectInstance(StatusEffects.RESISTANCE, 1000000000, 2, false, true));
+			mob.addStatusEffect(new StatusEffectInstance(StatusEffects.RESISTANCE, 1000000000, 1, false, true));
 		}
 	}
 
@@ -98,10 +99,10 @@ public class Event implements ModInitializer {
 		if (hasCompassOrMap && currentState) {
 			BlockPos playerPOS = player.getBlockPos();
 			player.getServerWorld().getGameRules().get(GameRules.REDUCED_DEBUG_INFO).set(false, player.getServer());
-			player.sendMessage(Text.literal("Координаты включены (компас или карта в руке)! X: " + playerPOS.getX() + " Y: " + playerPOS.getY()+ " Z: " + playerPOS.getZ()), true);
+			player.sendMessage(Text.literal("Вы чувсвуете направление.."), true);
 		} else if (!hasCompassOrMap && !currentState) {
 			player.getServerWorld().getGameRules().get(GameRules.REDUCED_DEBUG_INFO).set(true, player.getServer());
-			player.sendMessage(Text.literal("Используйте компас или карту для просмотра кординат"), true);
+			player.sendMessage(Text.literal("Направление утрачено."), true);
 		}
 	}
 
@@ -131,10 +132,10 @@ public class Event implements ModInitializer {
 
 			// Список возможных материалов брони
 			Item[] armorMaterials = {
-					Items.IRON_HELMET, Items.DIAMOND_HELMET, Items.GOLDEN_HELMET, Items.NETHERITE_HELMET,
-					Items.IRON_CHESTPLATE, Items.DIAMOND_CHESTPLATE, Items.GOLDEN_CHESTPLATE, Items.NETHERITE_CHESTPLATE,
-					Items.IRON_LEGGINGS, Items.DIAMOND_LEGGINGS, Items.GOLDEN_LEGGINGS, Items.NETHERITE_LEGGINGS,
-					Items.IRON_BOOTS, Items.DIAMOND_BOOTS, Items.GOLDEN_BOOTS, Items.NETHERITE_BOOTS
+					Items.IRON_HELMET, Items.DIAMOND_HELMET, Items.GOLDEN_HELMET,
+					Items.IRON_CHESTPLATE, Items.DIAMOND_CHESTPLATE, Items.GOLDEN_CHESTPLATE,
+					Items.IRON_LEGGINGS, Items.DIAMOND_LEGGINGS, Items.GOLDEN_LEGGINGS,
+					Items.IRON_BOOTS, Items.DIAMOND_BOOTS, Items.GOLDEN_BOOTS,
 			};
 
 			// Устанавливаем броню для каждого слота с случайным материалом
@@ -146,10 +147,10 @@ public class Event implements ModInitializer {
 			if (random.nextBoolean()) mob.equipStack(EquipmentSlot.FEET, new ItemStack(armorMaterials[random.nextInt(4) + 12]));  // 12-15 индексы для ботинок
 
 			// Устанавливаем шанс выпадения брони
-			mob.setEquipmentDropChance(EquipmentSlot.HEAD, 0.5f);
-			mob.setEquipmentDropChance(EquipmentSlot.CHEST, 0.5f);
-			mob.setEquipmentDropChance(EquipmentSlot.LEGS, 0.5f);
-			mob.setEquipmentDropChance(EquipmentSlot.FEET, 0.5f);
+			mob.setEquipmentDropChance(EquipmentSlot.HEAD, 0.2f);
+			mob.setEquipmentDropChance(EquipmentSlot.CHEST, 0.2f);
+			mob.setEquipmentDropChance(EquipmentSlot.LEGS, 0.2f);
+			mob.setEquipmentDropChance(EquipmentSlot.FEET, 0.2f);
 		}
 	}
 	private void chargeCreeper(CreeperEntity creeper) {
