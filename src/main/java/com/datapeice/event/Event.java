@@ -1,5 +1,6 @@
 package com.datapeice.event;
 
+import net.minecraft.text.Text;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerEntityEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
@@ -22,7 +23,6 @@ import net.minecraft.scoreboard.ScoreboardObjective;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
-import net.minecraft.text.Text;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.GameRules;
 import org.slf4j.Logger;
@@ -38,6 +38,7 @@ public class Event implements ModInitializer {
 	@Override
 	public void onInitialize() {
 		LOGGER.info("SL:" +
+
 				"Eventik loaded! :3");
 		ServerEntityEvents.ENTITY_LOAD.register((entity, world) -> {
 			if (entity instanceof HostileEntity mob) {
@@ -46,7 +47,7 @@ public class Event implements ModInitializer {
 			}
 			if (entity instanceof CreeperEntity creeper) {
 				Random random = new Random();
-				if (!creeper.isCharged() && (random.nextInt(0, 10) < 2)) { // 50% шанс
+				if (!creeper.isCharged() && (random.nextInt(0, 99) < 5)) { // 5% шанс
 					chargeCreeper(creeper); // Заряжаем крипера
 					creeper.setFireTicks(0); // Снимаем огонь с крипера
 				}
@@ -141,10 +142,10 @@ public class Event implements ModInitializer {
 			// Устанавливаем броню для каждого слота с случайным материалом
 
 
-			if (random.nextBoolean()) mob.equipStack(EquipmentSlot.HEAD, new ItemStack(armorMaterials[random.nextInt(4)]));  // 0-3 индексы для шлема
-			if (random.nextBoolean()) mob.equipStack(EquipmentSlot.CHEST, new ItemStack(armorMaterials[random.nextInt(4) + 4]));  // 4-7 индексы для нагрудников
-			if (random.nextBoolean()) mob.equipStack(EquipmentSlot.LEGS, new ItemStack(armorMaterials[random.nextInt(4) + 8]));  // 8-11 индексы для поножей
-			if (random.nextBoolean()) mob.equipStack(EquipmentSlot.FEET, new ItemStack(armorMaterials[random.nextInt(4) + 12]));  // 12-15 индексы для ботинок
+			if (random.nextBoolean()) mob.equipStack(EquipmentSlot.HEAD, new ItemStack(armorMaterials[random.nextInt(3)]));  // 0-2 индексы для шлема
+			if (random.nextBoolean()) mob.equipStack(EquipmentSlot.CHEST, new ItemStack(armorMaterials[random.nextInt(3) + 3]));  // 3-5 индексы для нагрудников
+			if (random.nextBoolean()) mob.equipStack(EquipmentSlot.LEGS, new ItemStack(armorMaterials[random.nextInt(3) + 6]));  // 6-8 индексы для поножей
+			if (random.nextBoolean()) mob.equipStack(EquipmentSlot.FEET, new ItemStack(armorMaterials[random.nextInt(3) + 9]));  // 9-11 индексы для ботинок
 
 			// Устанавливаем шанс выпадения брони
 			mob.setEquipmentDropChance(EquipmentSlot.HEAD, 0.2f);
