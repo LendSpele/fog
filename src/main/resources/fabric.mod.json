@@ -3,15 +3,15 @@
 	"id": "eventik",
 	"version": "${version}",
 	"name": "Event",
-	"description": "Created by datapeice",
+	"description": "Created by datapeice & LendSpele",
 	"authors": [
-		"Illia Datsiuk"
+		"Illia Datsiuk & LendSpele"
 	],
 	"contact": {
 		"homepage": "https://fabricmc.net/",
 		"sources": "https://github.com/FabricMC/fabric-example-mod"
 	},
-	"license": "CC0-1.0",
+	"license": "MIT",
 	"icon": "assets/eventik/icon.png",
 	"environment": "*",
 	"entrypoints": {

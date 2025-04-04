@@ -1,5 +1,6 @@
 package com.datapeice.event;
 
+import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerEntityEvents;
@@ -23,6 +24,7 @@ import net.minecraft.scoreboard.ScoreboardObjective;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.util.Formatting;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.GameRules;
 import org.slf4j.Logger;
@@ -37,9 +39,7 @@ public class Event implements ModInitializer {
 
 	@Override
 	public void onInitialize() {
-		LOGGER.info("SL:" +
-
-				"Eventik loaded! :3");
+		LOGGER.info("SL:\nEventik loaded!\n by datapeice & LendSpele :3");
 		ServerEntityEvents.ENTITY_LOAD.register((entity, world) -> {
 			if (entity instanceof HostileEntity mob) {
 				enhanceMobArmor(mob);
@@ -99,15 +99,39 @@ public class Event implements ModInitializer {
 
 		if (hasCompassOrMap) {
 			BlockPos playerPOS = player.getBlockPos();
-			// player.getServerWorld().getGameRules().get(GameRules.REDUCED_DEBUG_INFO).set(false, player.getServer());
-			String text = "Вы чувсвуете направление.. X: " + playerPOS.getX() + " Y: " + + playerPOS.getY() + " Z: " + playerPOS.getZ();
-			player.sendMessage(Text.literal(text), true);
+			Text compass = Text.empty()
+					.append(Text.literal("X: ").setStyle(Style.EMPTY.withColor(Formatting.RED)))
+					.append(Text.literal(String.valueOf(playerPOS.getX())).setStyle(Style.EMPTY.withColor(Formatting.RED)))
+
+					.append(Text.literal(" Y: ").setStyle(Style.EMPTY.withColor(Formatting.GREEN)))
+					.append(Text.literal(String.valueOf(playerPOS.getY())).setStyle(Style.EMPTY.withColor(Formatting.GREEN)))
+
+					.append(Text.literal(" Z: ").setStyle(Style.EMPTY.withColor(Formatting.AQUA)))
+					.append(Text.literal(String.valueOf(playerPOS.getZ())).setStyle(Style.EMPTY.withColor(Formatting.AQUA)));
+
+			player.sendMessage(compass, true);
+
 		} else if (!hasCompassOrMap) {
-			player.sendMessage(Text.literal("Направление утрачено."), true);
+				Text noCompass = Text.literal("X: ")
+						.setStyle(Style.EMPTY.withColor(Formatting.RED))
+						.append(Text.literal("-").setStyle(Style.EMPTY.withColor(Formatting.RED)))
+						.append(Text.literal(" Y: ")
+								.setStyle(Style.EMPTY.withColor(Formatting.GREEN)))
+						.append(Text.literal("-").setStyle(Style.EMPTY.withColor(Formatting.GREEN)))
+						.append(Text.literal(" Z: ")
+								.setStyle(Style.EMPTY.withColor(Formatting.AQUA)))
+						.append(Text.literal("-").setStyle(Style.EMPTY.withColor(Formatting.AQUA)));
+
+				player.sendMessage(noCompass, true);
+			}
+			// player.getServerWorld().getGameRules().get(GameRules.REDUCED_DEBUG_INFO).set(false, player.getServer());
+			// String text = "X: " + playerPOS.getX() + " Y: " + + playerPOS.getY() + " Z: " + playerPOS.getZ();
+			// player.sendMessage(Text.literal(text), true);
+		// } else if (!hasCompassOrMap) {
+		//	 player.sendMessage(Text.literal("X: - Y: - Z: -"), true);
 			// player.getServerWorld().getGameRules().get(GameRules.REDUCED_DEBUG_INFO).set(true, player.getServer());
 
 		}
-	}
 
 	private void updatePlayerNames(MinecraftServer server, ServerPlayerEntity player) {
 		boolean shouldShowNames = false;
