@@ -95,15 +95,17 @@ public class Event implements ModInitializer {
 	}
 
 	private void updateDebugInfo(ServerPlayerEntity player, boolean hasCompassOrMap) {
-		boolean currentState = player.getServerWorld().getGameRules().getBoolean(GameRules.REDUCED_DEBUG_INFO);
+		// boolean currentState = player.getServerWorld().getGameRules().getBoolean(GameRules.REDUCED_DEBUG_INFO);
 
-		if (hasCompassOrMap && currentState) {
+		if (hasCompassOrMap) {
 			BlockPos playerPOS = player.getBlockPos();
-			player.getServerWorld().getGameRules().get(GameRules.REDUCED_DEBUG_INFO).set(false, player.getServer());
-			player.sendMessage(Text.literal("Вы чувсвуете направление.."), true);
-		} else if (!hasCompassOrMap && !currentState) {
-			player.getServerWorld().getGameRules().get(GameRules.REDUCED_DEBUG_INFO).set(true, player.getServer());
+			// player.getServerWorld().getGameRules().get(GameRules.REDUCED_DEBUG_INFO).set(false, player.getServer());
+			String text = "Вы чувсвуете направление.. X: " + playerPOS.getX() + " Y: " + + playerPOS.getY() + " Z: " + playerPOS.getZ();
+			player.sendMessage(Text.literal(text), true);
+		} else if (!hasCompassOrMap) {
 			player.sendMessage(Text.literal("Направление утрачено."), true);
+			// player.getServerWorld().getGameRules().get(GameRules.REDUCED_DEBUG_INFO).set(true, player.getServer());
+
 		}
 	}
 
