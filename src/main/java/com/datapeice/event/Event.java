@@ -47,7 +47,7 @@ public class Event implements ModInitializer {
 			}
 			if (entity instanceof CreeperEntity creeper) {
 				Random random = new Random();
-				if (!creeper.isCharged() && (random.nextInt(0, 99) < 5)) { // 5% шанс
+				if (!creeper.isCharged() && (random.nextInt(0, 99) == 1)) { // 1% шанс
 					chargeCreeper(creeper); // Заряжаем крипера
 					creeper.setFireTicks(0); // Снимаем огонь с крипера
 				}
