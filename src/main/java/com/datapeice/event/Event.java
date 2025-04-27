@@ -26,7 +26,6 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.GameRules;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -62,21 +61,26 @@ public class Event implements ModInitializer {
 
 	private void enhanceMobEffect(HostileEntity mob) {
 		Random rand = new Random();
-		if (rand.nextInt(0, 9) < 2){
-			mob.addStatusEffect(new StatusEffectInstance(StatusEffects.FIRE_RESISTANCE, 2400, 1, false, true));
+
+		if (mob.getTarget() != null && mob.getTarget().getType() != EntityType.CREEPER) {
+			if (rand.nextInt(0, 9) < 2){
+				mob.addStatusEffect(new StatusEffectInstance(StatusEffects.FIRE_RESISTANCE, 6000, 1, false, true));
+			}
+			if (rand.nextInt(0, 9) < 2){
+				mob.addStatusEffect(new StatusEffectInstance(StatusEffects.SPEED, 6000, 2, false, true));
+			}
+			if (rand.nextInt(0, 9) < 2){
+				mob.addStatusEffect(new StatusEffectInstance(StatusEffects.STRENGTH, 6000, 2, false, true));
+			}
+			if (rand.nextInt(0, 9) < 2){
+				mob.addStatusEffect(new StatusEffectInstance(StatusEffects.HEALTH_BOOST, 6000, 2, false, true));
+			}
+			if (rand.nextInt(0, 9) < 2){
+				mob.addStatusEffect(new StatusEffectInstance(StatusEffects.RESISTANCE, 6000, 1, false, true));
+			}
 		}
-		if (rand.nextInt(0, 9) < 2){
-			mob.addStatusEffect(new StatusEffectInstance(StatusEffects.SPEED, 2400, 2, false, true));
-		}
-		if (rand.nextInt(0, 9) < 2){
-			mob.addStatusEffect(new StatusEffectInstance(StatusEffects.STRENGTH, 2400, 2, false, true));
-		}
-		if (rand.nextInt(0, 9) < 2){
-			mob.addStatusEffect(new StatusEffectInstance(StatusEffects.HEALTH_BOOST, 2400, 2, false, true));
-		}
-		if (rand.nextInt(0, 9) < 2){
-			mob.addStatusEffect(new StatusEffectInstance(StatusEffects.RESISTANCE, 2400, 1, false, true));
-		}
+
+
 	}
 
 	private void onServerTick(MinecraftServer server) {
@@ -111,7 +115,7 @@ public class Event implements ModInitializer {
 
 			player.sendMessage(compass, true);
 
-		} else if (!hasCompassOrMap) {
+		} else {
 				Text noCompass = Text.literal("X: ")
 						.setStyle(Style.EMPTY.withColor(Formatting.RED))
 						.append(Text.literal("-").setStyle(Style.EMPTY.withColor(Formatting.RED)))
@@ -124,13 +128,6 @@ public class Event implements ModInitializer {
 
 				player.sendMessage(noCompass, true);
 			}
-			// player.getServerWorld().getGameRules().get(GameRules.REDUCED_DEBUG_INFO).set(false, player.getServer());
-			// String text = "X: " + playerPOS.getX() + " Y: " + + playerPOS.getY() + " Z: " + playerPOS.getZ();
-			// player.sendMessage(Text.literal(text), true);
-		// } else if (!hasCompassOrMap) {
-		//	 player.sendMessage(Text.literal("X: - Y: - Z: -"), true);
-			// player.getServerWorld().getGameRules().get(GameRules.REDUCED_DEBUG_INFO).set(true, player.getServer());
-
 		}
 
 	private void updatePlayerNames(MinecraftServer server, ServerPlayerEntity player) {
@@ -189,7 +186,8 @@ public class Event implements ModInitializer {
 
 				LightningEntity lightning = EntityType.LIGHTNING_BOLT.create(creeper.getWorld(), SpawnReason.TRIGGERED);
 
-				lightning.refreshPositionAfterTeleport(pos.getX(), pos.getY(), pos.getZ());
+                assert lightning != null;
+                lightning.refreshPositionAfterTeleport(pos.getX(), pos.getY(), pos.getZ());
 
 				world.spawnEntity(lightning);
 				creeper.addStatusEffect(new StatusEffectInstance(StatusEffects.FIRE_RESISTANCE, 200, 3, false, false));
