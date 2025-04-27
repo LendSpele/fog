@@ -63,19 +63,19 @@ public class Event implements ModInitializer {
 	private void enhanceMobEffect(HostileEntity mob) {
 		Random rand = new Random();
 		if (rand.nextInt(0, 9) < 2){
-			mob.addStatusEffect(new StatusEffectInstance(StatusEffects.FIRE_RESISTANCE, 1000000000, 1, false, true));
+			mob.addStatusEffect(new StatusEffectInstance(StatusEffects.FIRE_RESISTANCE, 2400, 1, false, true));
 		}
 		if (rand.nextInt(0, 9) < 2){
-			mob.addStatusEffect(new StatusEffectInstance(StatusEffects.SPEED, 1000000000, 2, false, true));
+			mob.addStatusEffect(new StatusEffectInstance(StatusEffects.SPEED, 2400, 2, false, true));
 		}
 		if (rand.nextInt(0, 9) < 2){
-			mob.addStatusEffect(new StatusEffectInstance(StatusEffects.STRENGTH, 1000000000, 2, false, true));
+			mob.addStatusEffect(new StatusEffectInstance(StatusEffects.STRENGTH, 2400, 2, false, true));
 		}
 		if (rand.nextInt(0, 9) < 2){
-			mob.addStatusEffect(new StatusEffectInstance(StatusEffects.HEALTH_BOOST, 1000000000, 2, false, true));
+			mob.addStatusEffect(new StatusEffectInstance(StatusEffects.HEALTH_BOOST, 2400, 2, false, true));
 		}
 		if (rand.nextInt(0, 9) < 2){
-			mob.addStatusEffect(new StatusEffectInstance(StatusEffects.RESISTANCE, 1000000000, 1, false, true));
+			mob.addStatusEffect(new StatusEffectInstance(StatusEffects.RESISTANCE, 2400, 1, false, true));
 		}
 	}
 
