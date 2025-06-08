@@ -115,19 +115,20 @@ public class Event implements ModInitializer {
 
 			player.sendMessage(compass, true);
 
-		} else {
-				Text noCompass = Text.literal("X: ")
-						.setStyle(Style.EMPTY.withColor(Formatting.RED))
-						.append(Text.literal("-").setStyle(Style.EMPTY.withColor(Formatting.RED)))
-						.append(Text.literal(" Y: ")
-								.setStyle(Style.EMPTY.withColor(Formatting.GREEN)))
-						.append(Text.literal("-").setStyle(Style.EMPTY.withColor(Formatting.GREEN)))
-						.append(Text.literal(" Z: ")
-								.setStyle(Style.EMPTY.withColor(Formatting.AQUA)))
-						.append(Text.literal("-").setStyle(Style.EMPTY.withColor(Formatting.AQUA)));
-
-				player.sendMessage(noCompass, true);
-			}
+		}
+//		else {                         ТЕКСТА НЕТУ КОГДА В РУКЕ НЕТУ КОМАСА/КАРТЫ
+//				Text noCompass = Text.literal("X: ")
+//						.setStyle(Style.EMPTY.withColor(Formatting.RED))
+//						.append(Text.literal("-").setStyle(Style.EMPTY.withColor(Formatting.RED)))
+//						.append(Text.literal(" Y: ")
+//								.setStyle(Style.EMPTY.withColor(Formatting.GREEN)))
+//						.append(Text.literal("-").setStyle(Style.EMPTY.withColor(Formatting.GREEN)))
+//						.append(Text.literal(" Z: ")
+//								.setStyle(Style.EMPTY.withColor(Formatting.AQUA)))
+//						.append(Text.literal("-").setStyle(Style.EMPTY.withColor(Formatting.AQUA)));
+//
+//				player.sendMessage(noCompass, true);
+//			}
 		}
 
 	private void updatePlayerNames(MinecraftServer server, ServerPlayerEntity player) {
