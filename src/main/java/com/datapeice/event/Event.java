@@ -100,6 +100,7 @@ public class Event implements ModInitializer {
 			BlockPos playerPOS = player.getBlockPos();
 
 			int[] pos = RandomNumber.getRandomPos();
+			//
 
             Text compass = Text.empty()
 					.append(Text.literal("X: ").setStyle(Style.EMPTY.withColor(Formatting.RED)))
