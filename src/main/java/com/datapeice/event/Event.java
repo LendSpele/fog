@@ -26,7 +26,6 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.GameRules;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -99,38 +98,35 @@ public class Event implements ModInitializer {
 
 		if (hasCompassOrMap) {
 			BlockPos playerPOS = player.getBlockPos();
-			Text compass = Text.empty()
+
+			int[] pos = RandomNumber.getRandomPos();
+
+            Text compass = Text.empty()
 					.append(Text.literal("X: ").setStyle(Style.EMPTY.withColor(Formatting.RED)))
-					.append(Text.literal(String.valueOf(playerPOS.getX())).setStyle(Style.EMPTY.withColor(Formatting.RED)))
+					.append(Text.literal(String.valueOf(pos[1])).setStyle(Style.EMPTY.withColor(Formatting.RED)))
 
 					.append(Text.literal(" Y: ").setStyle(Style.EMPTY.withColor(Formatting.GREEN)))
 					.append(Text.literal(String.valueOf(playerPOS.getY())).setStyle(Style.EMPTY.withColor(Formatting.GREEN)))
 
 					.append(Text.literal(" Z: ").setStyle(Style.EMPTY.withColor(Formatting.AQUA)))
-					.append(Text.literal(String.valueOf(playerPOS.getZ())).setStyle(Style.EMPTY.withColor(Formatting.AQUA)));
+					.append(Text.literal(String.valueOf(pos[2])).setStyle(Style.EMPTY.withColor(Formatting.AQUA)));
 
 			player.sendMessage(compass, true);
 
-		} else if (!hasCompassOrMap) {
-				Text noCompass = Text.literal("X: ")
-						.setStyle(Style.EMPTY.withColor(Formatting.RED))
-						.append(Text.literal("-").setStyle(Style.EMPTY.withColor(Formatting.RED)))
-						.append(Text.literal(" Y: ")
-								.setStyle(Style.EMPTY.withColor(Formatting.GREEN)))
-						.append(Text.literal("-").setStyle(Style.EMPTY.withColor(Formatting.GREEN)))
-						.append(Text.literal(" Z: ")
-								.setStyle(Style.EMPTY.withColor(Formatting.AQUA)))
-						.append(Text.literal("-").setStyle(Style.EMPTY.withColor(Formatting.AQUA)));
-
-				player.sendMessage(noCompass, true);
-			}
-			// player.getServerWorld().getGameRules().get(GameRules.REDUCED_DEBUG_INFO).set(false, player.getServer());
-			// String text = "X: " + playerPOS.getX() + " Y: " + + playerPOS.getY() + " Z: " + playerPOS.getZ();
-			// player.sendMessage(Text.literal(text), true);
-		// } else if (!hasCompassOrMap) {
-		//	 player.sendMessage(Text.literal("X: - Y: - Z: -"), true);
-			// player.getServerWorld().getGameRules().get(GameRules.REDUCED_DEBUG_INFO).set(true, player.getServer());
-
+		}
+//		else {                         ТЕКСТА НЕТ КОГДА В РУКЕ НЕТ КОМАСА/КАРТЫ
+//				Text noCompass = Text.literal("X: ")
+//						.setStyle(Style.EMPTY.withColor(Formatting.RED))
+//						.append(Text.literal("-").setStyle(Style.EMPTY.withColor(Formatting.RED)))
+//						.append(Text.literal(" Y: ")
+//								.setStyle(Style.EMPTY.withColor(Formatting.GREEN)))
+//						.append(Text.literal("-").setStyle(Style.EMPTY.withColor(Formatting.GREEN)))
+//						.append(Text.literal(" Z: ")
+//								.setStyle(Style.EMPTY.withColor(Formatting.AQUA)))
+//						.append(Text.literal("-").setStyle(Style.EMPTY.withColor(Formatting.AQUA)));
+//
+//				player.sendMessage(noCompass, true);
+//			}
 		}
 
 	private void updatePlayerNames(MinecraftServer server, ServerPlayerEntity player) {
