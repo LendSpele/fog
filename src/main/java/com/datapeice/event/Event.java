@@ -62,19 +62,19 @@ public class Event implements ModInitializer {
 	private void enhanceMobEffect(HostileEntity mob) {
 		Random rand = new Random();
 		if (rand.nextInt(0, 9) < 2){
-			mob.addStatusEffect(new StatusEffectInstance(StatusEffects.FIRE_RESISTANCE, 1000000000, 1, false, true));
+			mob.addStatusEffect(new StatusEffectInstance(StatusEffects.FIRE_RESISTANCE, 600, 1, false, true));
 		}
 		if (rand.nextInt(0, 9) < 2){
-			mob.addStatusEffect(new StatusEffectInstance(StatusEffects.SPEED, 1000000000, 2, false, true));
+			mob.addStatusEffect(new StatusEffectInstance(StatusEffects.SPEED, 600, 2, false, true));
 		}
 		if (rand.nextInt(0, 9) < 2){
-			mob.addStatusEffect(new StatusEffectInstance(StatusEffects.STRENGTH, 1000000000, 2, false, true));
+			mob.addStatusEffect(new StatusEffectInstance(StatusEffects.STRENGTH, 600, 2, false, true));
 		}
 		if (rand.nextInt(0, 9) < 2){
-			mob.addStatusEffect(new StatusEffectInstance(StatusEffects.HEALTH_BOOST, 1000000000, 2, false, true));
+			mob.addStatusEffect(new StatusEffectInstance(StatusEffects.HEALTH_BOOST, 600, 2, false, true));
 		}
 		if (rand.nextInt(0, 9) < 2){
-			mob.addStatusEffect(new StatusEffectInstance(StatusEffects.RESISTANCE, 1000000000, 1, false, true));
+			mob.addStatusEffect(new StatusEffectInstance(StatusEffects.RESISTANCE, 600, 1, false, true));
 		}
 	}
 
@@ -100,16 +100,16 @@ public class Event implements ModInitializer {
 			BlockPos playerPOS = player.getBlockPos();
 
 			int[] pos = RandomNumber.getRandomPos();
-			//
+
 
             Text compass = Text.empty()
 					.append(Text.literal("X: ").setStyle(Style.EMPTY.withColor(Formatting.RED)))
 					.append(Text.literal(String.valueOf(pos[1])).setStyle(Style.EMPTY.withColor(Formatting.RED)))
 
-					.append(Text.literal(" Y: ").setStyle(Style.EMPTY.withColor(Formatting.GREEN)))
-					.append(Text.literal(String.valueOf(playerPOS.getY())).setStyle(Style.EMPTY.withColor(Formatting.GREEN)))
+ 					.append(Text.literal(" Y: ").setStyle(Style.EMPTY.withColor(Formatting.GREEN)))
+				.append(Text.literal(String.valueOf(playerPOS.getY())).setStyle(Style.EMPTY.withColor(Formatting.GREEN)))
 
-					.append(Text.literal(" Z: ").setStyle(Style.EMPTY.withColor(Formatting.AQUA)))
+ 					.append(Text.literal(" Z: ").setStyle(Style.EMPTY.withColor(Formatting.AQUA)))
 					.append(Text.literal(String.valueOf(pos[2])).setStyle(Style.EMPTY.withColor(Formatting.AQUA)));
 
 			player.sendMessage(compass, true);
